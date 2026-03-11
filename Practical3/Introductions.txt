@@ -1,0 +1,4 @@
+Hello, my name is Zhenjia Gong.
+I like drinking red tea and eating playing video games.
+I am enjoying learning IBI1 in person 
+I am happy that I can push my repo from Visual Studio Code to GitHub

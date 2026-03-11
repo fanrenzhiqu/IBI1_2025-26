@@ -1,0 +1,16 @@
+I like badminton
+I like coconut
+I like you
+I like him
+I like her
+<<<<<<< HEAD
+I like girls heihei 
+I donot like love now
+=======
+I like success very much
+I like music
+I like fragment
+I like sedback
+I like my competitor
+
+>>>>>>> master
