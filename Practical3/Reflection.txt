@@ -1,0 +1,3 @@
+ I was able to set up Git, fork the repository, and push to GitHub.
+ However, I had some issues with the git revert command at first.
+ Additionally, resolving merge conflicts when merging branches.
