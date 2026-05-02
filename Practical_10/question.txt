@@ -1,0 +1,19 @@
+Question:
+How has the relationship between the DALYs in China and the UK changed over time? Are they becoming more similar, less similar?
+
+Line number in dalys.py where analysis starts:
+91
+
+Discussion of results:
+The analysis compares the disability-adjusted life years (DALYs) between China and the United Kingdom from 1990 to 2019. 
+By calculating the absolute difference between their DALYs values each year and tracking this difference over time, we can determine whether 
+these two countries' disease burdens are converging (becoming more similar) or diverging (becoming less similar).
+
+The code produces:
+1. A time series plot showing both countries' DALYs trends side by side
+2. A plot of the absolute difference over time to visualize the convergence/divergence pattern
+3. Quantitative metrics including mean difference, standard deviation, and the year with maximum/minimum similarity
+4. A trend analysis comparing the first and last year to determine the overall direction of change
+
+These results help answer whether globalization, economic development, and health interventions have made these countries' 
+health burdens more similar or if regional and country-specific factors are causing them to diverge.
