@@ -36,7 +36,7 @@ print(first_10)
 max_index_first10 = first_10["DALYs"].idxmax()
 max_year_first10 = dalys_data.loc[max_index_first10, "Year"]
 print(max_year_first10)
-
+# Answer comment: In the first 10 years recorded for Afghanistan, the maximum DALYs occurred in 1998.
 
 
 #Complete Task 2: use a Boolean to show all years for Zimbabwe
@@ -48,7 +48,7 @@ first_year_zimbabwe = zimbabwe_years.min()
 last_year_zimbabwe = zimbabwe_years.max()
 print(first_year_zimbabwe)
 print(last_year_zimbabwe)
-
+# Answer comment: For Zimbabwe, DALYs were recorded from 1990 to 2019.
 
 
 #Complete Task 3: find the countries with the maximum and minimum DALYs in 2019
@@ -65,7 +65,8 @@ max_country = max_row["Entity"]
 min_country = min_row["Entity"]
 print(max_country)
 print(min_country)
-
+# Answer comment: In 2019, the country with the maximum DALYs was Lesotho.
+# In 2019, the country with the minimum DALYs was Singapore.
 
 
 
@@ -89,8 +90,14 @@ plt.show()
 
 
 #Complete Task 5: Custom Question - Compare DALYs relationship between China and UK
+
 #Question: How has the relationship between the DALYs in China and the UK changed over time? Are they becoming more similar, less similar?
-#Line number where analysis starts: 91
+#Line number where analysis starts: 96
+
+# This code answers the question by interpreting "relationship" as the DALYs gap
+# between China and the United Kingdom over time.
+# If the absolute difference becomes smaller, the two countries are becoming more similar.
+# If the absolute difference becomes larger, the two countries are becoming less similar.
 
 #Extract DALYs data for China and UK
 china_data = dalys_data.loc[dalys_data["Entity"] == "China", ["Year", "DALYs"]]
@@ -166,4 +173,8 @@ elif slope > 0:
 else:
     print("Conclusion: The DALYs gap between China and UK is stable overall.")
 
-
+# Final answer to the custom question:
+# The absolute difference decreased from 13997.38 in 1990 to 1313.90 in 2019.
+# The linear trend slope was -458.83.
+# Therefore, the DALYs gap between China and the United Kingdom narrowed over time,
+# meaning that the two countries became more similar in terms of DALYs.
