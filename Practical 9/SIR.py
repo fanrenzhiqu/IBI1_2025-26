@@ -16,7 +16,7 @@ therefore give similar overall behaviour, but not exactly the same curve.
 import os
 
 # Absolute path of this script's folder.  All output files are saved here, even
-# if the script is run from the repo root or another terminal directory.
+# if the script is run from the repo root, the Practical 9 folder, or an IDE.
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Matplotlib sometimes tries to write a font cache in the home directory.  
@@ -139,5 +139,10 @@ plt.ylabel("Number of people")
 plt.title("Stochastic SIR model")
 plt.legend()
 plt.tight_layout()
+
+# Save the plot in the same folder as this script.
 output_path = os.path.join(SCRIPT_DIR, "SIR_plot.png")
 plt.savefig(output_path, format="png")
+
+print("SIR simulation completed.")
+print(f"Plot saved as {output_path}")
