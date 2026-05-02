@@ -90,37 +90,39 @@ plt.show()
 
 #Complete Task 5: Custom Question - Compare DALYs relationship between China and UK
 #Question: How has the relationship between the DALYs in China and the UK changed over time? Are they becoming more similar, less similar?
-#Line number where analysis starts: 85
+#Line number where analysis starts: 91
 
 #Extract DALYs data for China and UK
 china_data = dalys_data.loc[dalys_data["Entity"] == "China", ["Year", "DALYs"]]
 uk_data = dalys_data.loc[dalys_data["Entity"] == "United Kingdom", ["Year", "DALYs"]]
 
-print("China data shape:", china_data.shape)
-print("UK data shape:", uk_data.shape)
-print("\nChina data:")
-print(china_data.head())
-print("\nUK data:")
-print(uk_data.head())
+#Create a merged dataframe for easier comparison and ensure it is ordered by year
+china_uk = (
+    china_data.merge(uk_data, on="Year", how="inner", suffixes=("_China", "_UK"))
+    .sort_values("Year")
+    .reset_index(drop=True)
+)
 
-#Create a merged dataframe for easier comparison
-china_uk = china_data.merge(uk_data, on="Year", how="inner", suffixes=("_China", "_UK"))
-print("\nMerged data:")
-print(china_uk)
-
-#Calculate the absolute difference and relative difference
+#Calculate the absolute difference and a symmetric relative difference
 china_uk["Absolute_Diff"] = abs(china_uk["DALYs_China"] - china_uk["DALYs_UK"])
-china_uk["Relative_Diff"] = china_uk["Absolute_Diff"] / china_uk["DALYs_China"]
+china_uk["Relative_Diff"] = 2 * china_uk["Absolute_Diff"] / (
+    china_uk["DALYs_China"] + china_uk["DALYs_UK"]
+)
 
-print("\nDifference analysis:")
-print(china_uk[["Year", "Absolute_Diff", "Relative_Diff"]])
-
-#Calculate statistics
-print("\nAbsolute difference statistics:")
-print(f"Mean: {china_uk['Absolute_Diff'].mean():.2f}")
-print(f"Std Dev: {china_uk['Absolute_Diff'].std():.2f}")
-print(f"Min year: {china_uk.loc[china_uk['Absolute_Diff'].idxmin(), 'Year']:.0f} (most similar)")
-print(f"Max year: {china_uk.loc[china_uk['Absolute_Diff'].idxmax(), 'Year']:.0f} (most different)")
+#Print the comparison summary
+print("\nChina vs United Kingdom DALYs comparison")
+print(f"Years compared: {china_uk['Year'].min()} to {china_uk['Year'].max()}")
+print(f"Number of years: {len(china_uk)}")
+print(f"Mean absolute difference: {china_uk['Absolute_Diff'].mean():.2f}")
+print(f"Mean relative difference: {china_uk['Relative_Diff'].mean():.3f}")
+print(
+    f"Most similar year: {int(china_uk.loc[china_uk['Absolute_Diff'].idxmin(), 'Year'])}, "
+    f"difference = {china_uk['Absolute_Diff'].min():.2f}"
+)
+print(
+    f"Most different year: {int(china_uk.loc[china_uk['Absolute_Diff'].idxmax(), 'Year'])}, "
+    f"difference = {china_uk['Absolute_Diff'].max():.2f}"
+)
 
 #Plot 1: Time series comparison
 plt.figure(figsize=(12, 6))
@@ -144,20 +146,24 @@ plt.xticks(rotation=90)
 plt.tight_layout()
 plt.show()
 
-#Calculate trend in difference
-#If the trend is downward, they're becoming more similar; if upward, less similar
+#Calculate trend in difference using both first/last comparison and linear slope
 first_diff = china_uk["Absolute_Diff"].iloc[0]
 last_diff = china_uk["Absolute_Diff"].iloc[-1]
 diff_change = last_diff - first_diff
 percent_change = (diff_change / first_diff) * 100
+slope, intercept = np.polyfit(china_uk["Year"], china_uk["Absolute_Diff"], 1)
 
-print(f"\nTrend analysis:")
+print("\nTrend analysis:")
 print(f"First year ({int(china_uk['Year'].iloc[0])}) absolute difference: {first_diff:.2f}")
 print(f"Last year ({int(china_uk['Year'].iloc[-1])}) absolute difference: {last_diff:.2f}")
 print(f"Change in difference: {diff_change:.2f} ({percent_change:.2f}%)")
-if diff_change < 0:
-    print("Result: China and UK are becoming MORE SIMILAR over time")
+print(f"Linear trend slope: {slope:.2f} (negative means the gap is narrowing)")
+
+if slope < 0:
+    print("Conclusion: The gap between China and UK DALYs is narrowing overall, so they are becoming more similar.")
+elif slope > 0:
+    print("Conclusion: The gap between China and UK DALYs is widening overall, so they are becoming less similar.")
 else:
-    print("Result: China and UK are becoming LESS SIMILAR over time")
+    print("Conclusion: The DALYs gap between China and UK is stable overall.")
 
 
