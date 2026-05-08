@@ -1,3 +1,15 @@
+# Pseudocode:
+# Start with 5 infected students.
+# Set the daily infection growth rate to 0.4.
+# Start counting from day 1.
+# Print the number of infected students on day 1.
+# While the number of infected students is less than 91:
+#     Calculate the next day's infected number using the growth rate.
+#     Increase the day counter by 1.
+#     Print the day number and the infected number.
+# Print the total number of days needed to infect the whole class.
+
+
 # Set the starting number of infected students
 number = 5
 
