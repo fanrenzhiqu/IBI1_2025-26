@@ -1,3 +1,21 @@
+# Pseudocode:
+# Create a dictionary to store the 2020 population data for each country.
+# Create a dictionary to store the 2024 population data for each country.
+# Create an empty dictionary to store the percentage population change for each country.
+# For each country in the 2020 population dictionary:
+#     Calculate the percentage population change from 2020 to 2024.
+#     Store the percentage change in the new dictionary.
+#     Print the country name and its percentage change.
+# Sort the countries by percentage population change from largest increase to largest decrease.
+# Print the sorted population changes.
+# Identify the first country in the sorted list as the largest increase.
+# Identify the last country in the sorted list as the largest decrease.
+# Print the countries with the largest increase and largest decrease.
+# Convert the percentage change dictionary into two lists for plotting.
+# Create a bar chart showing the population change for each country.
+# Add an x-axis label, y-axis label, and title to the bar chart.
+# Display the bar chart.
+
 #make dictionary of Population 2020
 Population_2020 = {
     "UK" : 66.7,
@@ -41,7 +59,7 @@ print("Change:", round(Percent_changes[largest_increase_country], 2), "%")
 print("\nCountry with the largest decrease:", largest_decrease_country)
 print("Change:", round(Percent_changes[largest_decrease_country], 2), "%")
 
-# create a well-labelled bar chart
+# Create a well-labelled bar chart
 import matplotlib.pyplot as plt
 
 country_names = list(Percent_changes.keys())
