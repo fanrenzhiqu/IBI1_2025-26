@@ -1,8 +1,11 @@
 # What does this piece of code do?
 # Answer:
-# This code generates a random integer between 1 and 10 using randint()in each iteration of the loop and adds it to total_rand.
-# The loop runs 11 times (progress starts at 0 and continues while progress <= 10), then prints the final sum.
-# The ceil() function is imported but not used.
+# This code generates 11 random integers between 1 and 10 and adds them together.
+# It starts with total_rand = 0 and progress = 0.
+# The while loop runs 11 times because progress starts at 0 and continues while progress <= 10.
+# In each loop, randint(1, 10) generates one random integer, and this number is added to total_rand.
+# Finally, the program prints the sum of the 11 random numbers.
+# The ceil() function is imported but not used in this code.
 
 # Import libraries
 # randint allows drawing a random number,
