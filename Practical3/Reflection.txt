@@ -1,3 +1,4 @@
  I was able to set up Git, fork the repository, and push to GitHub.
  However, I had some issues with the git revert command at first.
  Additionally, resolving merge conflicts when merging branches.
+Overall, this practical helped me understand the basic workflow of Git and GitHub more clearly. Although they are difficult, I believe I will have good commands of them.
