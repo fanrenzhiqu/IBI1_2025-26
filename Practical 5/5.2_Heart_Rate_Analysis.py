@@ -1,3 +1,19 @@
+# Pseudocode:
+# Create a list of resting heart rates.
+# Count how many patients are in the dataset.
+# Calculate the mean heart rate.
+# Print the number of patients and the mean heart rate.
+# Set the count of Low, Normal, and High heart rate categories to 0.
+# For each heart rate in the list:
+#     If the heart rate is less than 60, add 1 to the Low category.
+#     If the heart rate is between 60 and 120, add 1 to the Normal category.
+#     If the heart rate is greater than 120, add 1 to the High category.
+# Print the number of patients in each heart rate category.
+# Compare the three category counts.
+# Print which category contains the largest number of patients.
+# Create a pie chart using the three category counts.
+# Add labels and a title to the pie chart.
+# Display the pie chart.
 
 # 1. number of patients and mean heart rate
 heart_rate = [72, 60, 126, 85, 90, 59, 76, 131, 88, 121, 64]
