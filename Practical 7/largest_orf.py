@@ -1,3 +1,19 @@
+#Pseudocode:
+#Define the RNA sequence and stop codons.
+#Create an empty list for ORFs.
+#Scan the RNA sequence for AUG start codons.
+#For each AUG found:
+#    Read codons forward in groups of three.
+#    If a stop codon is found:
+#        Save the sequence from AUG to the stop codon as an ORF.
+#        Stop reading this ORF.
+#If ORFs are found:
+#    Find and print the longest ORF and its length.
+#Else:
+#    Print "No ORF found".
+
+
+
 # Create the RNA sequence
 seq = 'AAGAUACAUGCAAGUGGUGUGUCUGUUCUGAGAGGGCCUAAAAG'
 
