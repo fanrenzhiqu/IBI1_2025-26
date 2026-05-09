@@ -1,34 +1,57 @@
+# Pseudocode:
+# 1. Import matplotlib to create the pie chart.
+# 2. Define the FASTA file containing yeast cDNA sequences.
+# 3. Read the FASTA file:
+#    - Store each sequence header and its full DNA sequence.
+#    - Join sequence lines that belong to the same gene.
+# 4. Ask the user to choose one stop codon: TAA, TAG, or TGA.
+# 5. For each gene sequence:
+#    - Search for ATG start codons.
+#    - From each ATG, read forward in groups of three bases.
+#    - Find in-frame stop codons that match the user's chosen stop codon.
+#    - If several valid ORFs are found, keep the longest one for that gene.
+# 6. Count all codons upstream of the final stop codon.
+# 7. Print the codon counts.
+# 8. Create and save a labelled pie chart showing codon frequency.
+
 import matplotlib.pyplot as plt
 
-FASTA_FILE = "Saccharomyces_cerevisiae.R64-1-1.cdna.all (1).fa"
+# Input FASTA file containing S. cerevisiae cDNA sequences.
+FASTA_FILE = "Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa"
 
 
 def read_fasta(filename):
     """
-    Read a FASTA file and return a list of tuples:
-    [(header, sequence), ...]
+    Read a FASTA file and return a list of records.
+    Each record is stored as a tuple: (header, sequence).
     """
     records = []
-    header = None # We first create a variable named `header`, and set it equal to `None` initially. 
-    #The meaning of `None` here is: No content yet / We have not yet read the header
+    header = None
     seq_lines = []
 
     with open(filename, "r") as file:
         for line in file:
-            line = line.strip() # Clean up line by stripping whitespace
+            line = line.strip()
+
+            # Skip empty lines.
             if not line:
                 continue
 
+            # A header line marks the start of a new FASTA record.
             if line.startswith(">"):
+                # Save the previous record before starting a new one.
                 if header is not None:
-                    sequence = "".join(seq_lines).upper() #Concatenate (join) all text elements in seq_lines into ONE single continuous string. And convert every character in the new concatenated string to UPPERCASE letters
+                    sequence = "".join(seq_lines).upper()
                     records.append((header, sequence))
-                header = line[1:]   # remove ">"
+
+                header = line[1:]  # Remove the ">" symbol.
                 seq_lines = []
+
             else:
+                # Add sequence lines belonging to the current gene.
                 seq_lines.append(line)
 
-        # save the last record
+        # Save the final record after the loop finishes.
         if header is not None:
             sequence = "".join(seq_lines).upper()
             records.append((header, sequence))
@@ -36,47 +59,35 @@ def read_fasta(filename):
     return records
 
 
-def get_gene_name(header):
+def find_longest_orf_for_stop(sequence, chosen_stop):
     """
-    Try to extract gene name from FASTA header.
-    Example header may contain: gene:XYZ
-    If not found, use the first word in header.
-    """
-    parts = header.split()
-
-    for part in parts:
-        if part.startswith("gene:"):
-            return part.split("gene:")[1]
-
-    return parts[0]
-
-
-def find_longest_orf_for_stop(sequence, chosen_stop): #It needs two inputs
-    """
-    Find the longest ORF in one sequence that:
+    Find the longest possible ORF in one sequence that:
     - starts with ATG
-    - ends with the chosen stop codon
-    - stop codon is in-frame
+    - ends with the user-selected stop codon
+    - has the selected stop codon in-frame
 
-    Return the ORF sequence including ATG and stop codon.
-    If no valid ORF exists, return None.
+    If there are multiple possible ORFs ending with the chosen stop codon,
+    keep the longest one.
     """
     longest_orf = None
-
     seq_length = len(sequence)
 
-    for start in range(seq_length - 2): #Each codon needs 3 letters, so it is "seq_length - 2"
+    for start in range(seq_length - 2):
         codon = sequence[start:start + 3]
 
+        # Check whether this position is a possible ORF start.
         if codon == "ATG":
-            # move in-frame from this ATG
+
+            # Read forward from this ATG in codon-sized steps.
             for i in range(start + 3, seq_length - 2, 3):
                 current_codon = sequence[i:i + 3]
 
+                # Only consider stop codons that match the user's choice.
                 if current_codon == chosen_stop:
-                    orf = sequence[start:i + 3]  # include stop codon
+                    orf = sequence[start:i + 3]
 
-                    if (longest_orf is None) or (len(orf) > len(longest_orf)):
+                    # Keep the longest ORF found so far.
+                    if longest_orf is None or len(orf) > len(longest_orf):
                         longest_orf = orf
 
     return longest_orf
@@ -84,41 +95,45 @@ def find_longest_orf_for_stop(sequence, chosen_stop): #It needs two inputs
 
 def count_codons_in_orf(orf_sequence, codon_counts):
     """
-    Count all codons upstream of the stop codon.
-    So we do NOT count the final stop codon itself.
+    Count codons upstream of the stop codon.
+    The final stop codon itself is excluded from the count.
     """
-    # exclude final stop codon
     coding_part = orf_sequence[:-3]
 
     for i in range(0, len(coding_part), 3):
         codon = coding_part[i:i + 3]
+
         if len(codon) == 3:
-            if codon in codon_counts:
-                codon_counts[codon] += 1
-            else:
-                codon_counts[codon] = 1
+            codon_counts[codon] = codon_counts.get(codon, 0) + 1
 
 
 def make_pie_chart(codon_counts, chosen_stop):
     """
-    Create and save pie chart to a file.
+    Create and save a pie chart showing codon frequency.
     """
-    # remove codons with 0 count
-    filtered_counts = {codon: count for codon, count in codon_counts.items() if count > 0}
+    filtered_counts = {
+        codon: count
+        for codon, count in codon_counts.items()
+        if count > 0
+    }
 
     labels = list(filtered_counts.keys())
     sizes = list(filtered_counts.values())
 
     plt.figure(figsize=(12, 12))
+
+    # Plot codon frequencies as percentages.
     plt.pie(
         sizes,
         labels=labels,
         autopct="%1.1f%%",
         startangle=90
     )
+
     plt.title(f"Codon frequency upstream of stop codon {chosen_stop}")
     plt.tight_layout()
 
+    # Save the chart to a PNG file instead of only displaying it.
     output_file = f"codon_frequency_{chosen_stop}.png"
     plt.savefig(output_file, dpi=300)
     plt.close()
@@ -127,8 +142,12 @@ def make_pie_chart(codon_counts, chosen_stop):
 
 
 def main():
+    """
+    Run the codon frequency analysis.
+    """
     valid_stops = ["TAA", "TAG", "TGA"]
 
+    # Ask the user to choose one valid stop codon.
     chosen_stop = input("Enter a stop codon (TAA, TAG, or TGA): ").strip().upper()
 
     while chosen_stop not in valid_stops:
@@ -139,6 +158,7 @@ def main():
     codon_counts = {}
     genes_used = 0
 
+    # Analyse only genes that contain a valid ORF ending with the chosen stop codon.
     for header, sequence in records:
         longest_orf = find_longest_orf_for_stop(sequence, chosen_stop)
 
