@@ -1,3 +1,19 @@
+# Pseudocode:
+# Create a dictionary to store gene names and their expression values.
+# Print the original gene expression dictionary.
+# Add MYC and its expression value to the dictionary.
+# Print the updated dictionary.
+# Convert the dictionary keys and values into two lists for plotting.
+# Create a bar chart showing the expression values of all genes.
+# Add a title, x-axis label, and y-axis label to the bar chart.
+# Set a gene of interest that can be changed in the script.
+# Check whether the selected gene is in the dictionary.
+# If the selected gene is present, print its expression value.
+# If the selected gene is not present, print an error message.
+# Calculate the average expression value across all genes.
+# Print the average gene expression level.
+
+
 gene_expression = {
 "TP53" : 12.4,
 "EGFR" : 15.1,
