@@ -1,15 +1,27 @@
-"""
-Practical 9: spatial stochastic SIR model.
-
-This version places the population on a 100 x 100 grid:
-    0 = susceptible
-    1 = infected
-    2 = recovered / resistant
-
-Unlike the well-mixed SIR model, infection can only pass from an infected cell to
-one of its eight neighbouring cells.  This lets the outbreak spread through space
-rather than instantly mixing across the whole population.
-"""
+# Pseudocode for the spatial SIR model:
+#
+# 1. Initialize a 100x100 grid:
+#    - All cells start as susceptible (0)
+#    - Set one central cell as infected (1)
+#    - Recovered cells will be marked as 2
+#
+# 2. Define parameters:
+#    - Infection probability beta = 0.3
+#    - Recovery probability gamma = 0.05
+#    - Time points = 1000
+#
+# 3. For each time step:
+#    a. Create a copy of the grid for updates
+#    b. For each cell in the grid:
+#       i. If the cell is susceptible (0):
+#          - Check its 8 neighbors
+#          - If any neighbor is infected (1), become infected with probability beta
+#       ii. If the cell is infected (1):
+#           - Recover with probability gamma, become recovered (2)
+#    c. Update the grid with new states
+#    d. Count and record the number of infected cells
+#
+# 4. Plot the infected count over time
 
 import os
 
