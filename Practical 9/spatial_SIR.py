@@ -1,27 +1,27 @@
 # Pseudocode for the spatial SIR model:
 #
-# 1. Initialize a 100x100 grid:
+# 1. Initialize a 100 x 100 grid:
 #    - All cells start as susceptible (0)
-#    - Set one central cell as infected (1)
+#    - Randomly choose one cell as the first infected individual (1)
 #    - Recovered cells will be marked as 2
 #
-# 2. Define parameters:
+# 2. Define model parameters:
 #    - Infection probability beta = 0.3
 #    - Recovery probability gamma = 0.05
-#    - Time points = 1000
+#    - Time points = 100
+#    - Save snapshots at time 0, 10, 50, and 100
 #
-# 3. For each time step:
-#    a. Create a copy of the grid for updates
-#    b. For each cell in the grid:
-#       i. If the cell is susceptible (0):
-#          - Check its 8 neighbors
-#          - If any neighbor is infected (1), become infected with probability beta
-#       ii. If the cell is infected (1):
-#           - Recover with probability gamma, become recovered (2)
-#    c. Update the grid with new states
-#    d. Count and record the number of infected cells
+# 3. For each time point:
+#    a. Make a copy of the current grid for updates.
+#    b. Find all infected cells using np.where().
+#    c. For each infected cell:
+#       i. Check its valid neighbouring cells.
+#       ii. If a neighbour is susceptible, randomly decide whether it becomes infected.
+#       iii. Randomly decide whether the infected cell recovers.
+#    d. Replace the old grid with the updated grid.
+#    e. Save snapshots at selected time points.
 #
-# 4. Plot the infected count over time
+# 4. Plot heatmaps showing the spatial spread of infection and recovery.
 
 import os
 
