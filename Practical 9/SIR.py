@@ -1,16 +1,19 @@
-"""
-Practical 9: simple stochastic SIR model.
+# Pseudocode for the SIR model:
+#
+# 1. Initialize the population:
+#    - Set total population N = 10000
+#    - Start with 1 infected person (I = 1), 0 recovered (R = 0), and the rest susceptible (S = N - 1)
+#    - Set infection rate beta = 0.3 and recovery rate gamma = 0.05
+#
+# 2. For each of 1000 time points:
+#    a. Calculate the infection probability for a susceptible person: infection_probability = beta * (I / N)
+#    b. For each susceptible person, randomly decide if they become infected based on infection_probability
+#    c. For each infected person, randomly decide if they recover based on gamma
+#    d. Update the counts: S -= new_infections, I += new_infections - new_recoveries, R += new_recoveries
+#    e. Record the current S, I, R values for plotting
+#
+# 3. Plot the time series of S, I, R over the 1000 time points
 
-This script models one outbreak in a well-mixed population.  The population is
-split into three groups:
-    S = susceptible people who can become infected
-    I = infected people who can infect others and can recover
-    R = recovered people who are assumed to be immune
-
-The model is stochastic because every susceptible/infected person is tested with
-random probabilities at every time point.  Running the file several times should
-therefore give similar overall behaviour, but not exactly the same curve.
-"""
 
 # Import necessary libraries.
 import os
