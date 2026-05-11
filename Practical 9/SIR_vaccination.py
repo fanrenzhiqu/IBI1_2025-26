@@ -1,11 +1,24 @@
-"""
-Practical 9: stochastic SIR model with vaccination.
-
-This script extends the simple SIR model by adding a vaccinated group.  Vaccinated
-people are counted separately from recovered people, but they behave similarly in
-one important way: they cannot become infected.  The total population remains
-10000 in every simulation.
-"""
+# Pseudocode for the SIR model with vaccination:
+#
+# 1. Define model parameters:
+#    - Total population N = 10000
+#    - Initial infected = 1
+#    - Infection rate beta = 0.3, recovery rate gamma = 0.05
+#    - Time points = 1000
+#    - Vaccination percentages = 0, 10, 20, ..., 100
+#
+# 2. For each vaccination percentage:
+#    a. Convert percentage to number of vaccinated people (V)
+#    b. Initialize: S = N - V - 1, I = 1, R = 0
+#    c. For each of 1000 time points:
+#       i. Calculate infection probability = beta * (I / N)
+#       ii. For each susceptible person, randomly decide infection based on probability
+#       iii. For each infected person, randomly decide recovery based on gamma
+#       iv. Update S -= new_infections, I += new_infections - new_recoveries, R += new_recoveries
+#       v. Record I for plotting
+#    d. Return the infected history
+#
+# 3. Plot the infected curves for all vaccination percentages
 
 import os
 
