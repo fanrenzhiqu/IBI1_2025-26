@@ -1,28 +1,20 @@
-# Pseudocode:
-# 1. Define input and output file names
-# 2. Define the list of stop codons (TAA, TAG, TGA)
-# 3. Define a function to find stop codons in a sequence:
-#    - Check if sequence starts with ATG (start codon)
-#    - Iterate through the sequence in steps of 3 (codons)
-#    - If a codon matches a stop codon, add it to the list
-#    - Return the list of found stop codons
-# 4. Define a function to write a sequence to the output file:
-#    - Create header with gene name and found stop codons
-#    - Write the sequence in lines of 60 characters each
-# 5. Open input and output files
-# 6. Initialize variables for gene name and sequence
-# 7. Read the input file line by line:
-#    - If line starts with '>', it's a header: extract gene name
-#    - Else, append to sequence
-#    - If next line is header or end of file, process the current sequence:
-#      - Find stop codons in the sequence
-#      - If stop codons found, write to output file
-#      - Reset sequence for next gene
-# 8. Close files (handled by 'with' statement)
+"""
+stop_codons.py
 
+Pseudocode:
+1. Define the input FASTA file and the output FASTA file.
+2. Define the three stop codons: TAA, TAG and TGA.
+3. Read the original FASTA file gene by gene.
+4. For each gene:
+   - Extract only the gene name from the FASTA header.
+   - Join all sequence lines into one complete sequence.
+   - Check which of the three stop codons are present at least once.
+5. If at least one stop codon is found:
+   - Write the gene to stop_genes.fa.
+   - The new sequence name contains only the gene name and the stop codons found.
+6. Write the sequence in lines of 60 bases.
+"""
 
-# This script reads a FASTA file, finds genes with at least one in-frame
-# stop codon (TAA, TAG, TGA), and writes them to a new FASTA file.
 
 input_file = "Saccharomyces_cerevisiae.R64-1-1.cdna.all.fa"
 output_file = "stop_genes.fa"
@@ -30,98 +22,91 @@ output_file = "stop_genes.fa"
 stop_codons = ["TAA", "TAG", "TGA"]
 
 
-def find_stop_codons(sequence):
+def get_gene_name(header_line):
     """
-    Find all in-frame stop codons in a DNA sequence.
+    Extract only the gene name from a FASTA header.
 
-    Args:
-        sequence (str): The DNA sequence to analyze.
-
-    Returns:
-        list: List of stop codons found in the sequence.
+    Example:
+        >GENE1 some extra description
+    becomes:
+        GENE1
     """
-    found = []
+    return header_line[1:].split()[0]
 
-    # ORF must begin with ATG (start codon)
-    if not sequence.startswith("ATG"):
-        return found
 
-    # Read codons in frame: positions 0, 3, 6, 9...
+def find_present_stop_codons(sequence):
+    """
+    Check which stop codons are present at least once as real codons.
+
+    The sequence is checked in groups of three bases.
+    Each stop codon is recorded only once, even if it appears many times.
+    """
+    sequence = sequence.upper()
+
+    found_stops = []
+
     for i in range(0, len(sequence) - 2, 3):
-        codon = sequence[i:i+3]
-        if codon in stop_codons:
-            found.append(codon)
+        codon = sequence[i:i + 3]
 
-    return found
+        if codon in stop_codons and codon not in found_stops:
+            found_stops.append(codon)
+
+    return found_stops
 
 
-def write_sequence(outfile, gene_name, sequence, found_stops):
+def write_fasta_record(outfile, gene_name, sequence, found_stops):
     """
-    Write a gene sequence to the output FASTA file with stop codons in header.
+    Write one FASTA record to the output file.
 
-    Args:
-        outfile (file object): The output file to write to.
-        gene_name (str): The name of the gene.
-        sequence (str): The DNA sequence.
-        found_stops (list): List of stop codons found.
+    The header contains only:
+    - the gene name
+    - the stop codons found in that gene
     """
-    # Write header line with gene name and stop codons
-    header = ">" + gene_name + "," + ",".join(found_stops) + "\n"
-    outfile.write(header)
+    header = ">" + gene_name + "_" + "_".join(found_stops)
+    outfile.write(header + "\n")
 
-    # Write sequence in lines of 60 bases each
     for i in range(0, len(sequence), 60):
-        outfile.write(sequence[i:i+60] + "\n")
+        outfile.write(sequence[i:i + 60] + "\n")
 
 
-# Open input and output files using 'with' for automatic closing
+def process_gene(outfile, gene_name, sequence_lines):
+    """
+    Process one gene sequence and write it to the output file
+    if it contains at least one stop codon.
+    """
+    if gene_name == "" or len(sequence_lines) == 0:
+        return
+
+    sequence = "".join(sequence_lines).upper()
+    found_stops = find_present_stop_codons(sequence)
+
+    if len(found_stops) > 0:
+        write_fasta_record(outfile, gene_name, sequence, found_stops)
+
+
 with open(input_file, "r") as infile, open(output_file, "w") as outfile:
     gene_name = ""
-    sequence = ""
+    sequence_lines = []
 
     for line in infile:
-        # Remove trailing newline
         line = line.strip()
 
-        if line.startswith(">"):
-            # Process previous gene if sequence exists
-            if sequence:
-                found_stops = find_stop_codons(sequence)
-                if found_stops:
-                    write_sequence(outfile, gene_name, sequence, found_stops)
-                sequence = ""  # Reset for next gene
-
-            # Extract gene name from header (remove '>')
-            gene_name = line[1:]
-        else:
-            # Append sequence line
-            sequence += line
-
-    # Process the last gene after loop ends
-    if sequence:
-        found_stops = find_stop_codons(sequence)
-        if found_stops:
-            write_sequence(outfile, gene_name, sequence, found_stops)
+        if line == "":
+            continue
 
         if line.startswith(">"):
             # Process the previous gene before starting a new one
-            if gene_name != "":
-                found_stops = find_stop_codons(sequence)
-                if len(found_stops) > 0:
-                    write_sequence(outfile, gene_name, sequence, found_stops)
+            process_gene(outfile, gene_name, sequence_lines)
 
             # Start a new gene
-            gene_name = line[1:].split()[0]
-            sequence = ""
+            gene_name = get_gene_name(line)
+            sequence_lines = []
 
         else:
-            #line.upper() means converting the line to uppercase.
-            sequence += line.upper()
+            sequence_lines.append(line)
 
-    # Process the last gene in the file
-    if gene_name != "":
-        found_stops = find_stop_codons(sequence)
-        if len(found_stops) > 0:
-            write_sequence(outfile, gene_name, sequence, found_stops)
+    # Process the final gene in the file
+    process_gene(outfile, gene_name, sequence_lines)
+
 
 print("Finished! Results written to", output_file)
