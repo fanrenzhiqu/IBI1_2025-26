@@ -1,0 +1,11 @@
+Feedback Response
+
+I have reviewed the feedback carefully and made changes to the relevant files. The main aim of these changes was to address the points where marks were lost, improve the clarity of my explanations, and make my files easier to understand.
+
+For Practical 3, I revised all four files in the folder. In Introductions.txt, I removed the incorrect word from the introduction so that the writing is clearer and more appropriate. In Reflection.txt, I added a summary to make the reflection more complete and to show more clearly what I learned from the practical. In index.md, I added the required weblink so that the webpage better meets the task requirements. In thingsIlike.txt, I updated the content based on the feedback and corrected the part that was not suitable. These changes helped improve both the accuracy and completeness of the Practical 3 submission.
+
+For Practical 4, I updated the answer section in mystery_code.py to explain the code more accurately. I wrote that the program generates 11 random integers between 1 and 10 and adds them together. I also explained the reason for the number of loops: progress starts at 0, and the while loop continues while progress is less than or equal to 10, so the loop runs 11 times in total. I also pointed out that ceil() is imported but not used in the program. This makes my answer clearer because it explains both the final result of the code and the logic behind the loop.
+
+For Week 5, although I received full marks, I still made improvements to the code. I added pseudocode to both 5.1_gene_expression.py and 5.2_Heart_Rate_Analysis.py. The pseudocode introduces the overall process of each script before the actual Python code, which makes the program logic easier to follow. It also helps show the planned algorithm in plain language before the detailed Python syntax. This makes the scripts more readable and better documented.
+
+Overall, I have corrected the issues raised in the feedback and also made additional improvements where possible. These changes make my files clearer, more accurate, and easier for another reader to understand.
