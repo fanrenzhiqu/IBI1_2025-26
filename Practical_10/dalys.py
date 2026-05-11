@@ -82,10 +82,8 @@ min_row = recent_data.loc[recent_data["DALYs"].idxmin()]
 max_country = max_row["Entity"]
 min_country = min_row["Entity"]
 
-print(max_row)
-print(min_row)
-print(max_country)
-print(min_country)
+print("Country with maximum DALYs in 2019: " + max_country)
+print("Country with minimum DALYs in 2019: " + min_country)
 
 # Answer comment: In 2019, the country with the maximum DALYs was Lesotho.
 # In 2019, the country with the minimum DALYs was Singapore.
