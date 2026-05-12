@@ -2,7 +2,7 @@ Question:
 How has the relationship between the DALYs in China and the UK changed over time? Are they becoming more similar, less similar?
 
 Line number in dalys.py where analysis starts:
-126
+124
 
 Discussion of results:
 1.The analysis compares DALYs in China and the United Kingdom from 1990 to 2019. I used two plots: one plot compares the DALYs trends of the two countries over time, and the second plot shows the absolute difference between them each year.
